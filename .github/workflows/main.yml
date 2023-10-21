@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master # Trigger CI/CD on push to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step to setup Java (as Maven requires Java)
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin' # or adopt, or zulu depending on your preference
+          java-version: '11' # specify the Java version needed for your build
+
+      # Step to Cache dependencies for faster subsequent runs
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Step to run Maven build
+      - name: Build with Maven
+        run: |
+          cd ./bank
+          mvn clean package -DbuildNumber=local -DskipTests
+
+      # Continue with your existing steps for Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./bank
+          push: true
+          tags: your-dockerhub-username/your-image-name:latest # change this to your image's tag
+  deploy:
+    needs: build-and-push # This ensures deploy job starts only after build-and-push job completes
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ec2-user
+        run: |
+          # existing ssh deployment script
