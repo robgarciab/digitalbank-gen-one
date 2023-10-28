@@ -19,7 +19,5 @@
 
 	<modules>
 		<module>bank</module>
-		<module>credit</module>
-		<module>test</module>
 	</modules>
 </project>

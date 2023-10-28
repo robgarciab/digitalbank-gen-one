@@ -48,10 +48,10 @@ jobs:
         with:
           context: ./bank
           push: true
-          tags: your-dockerhub-username/your-image-name:latest # change this to your image's tag
+          tags: robgarciab/digitalbank:latest
   deploy:
     needs: build-and-push # This ensures deploy job starts only after build-and-push job completes
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: SSH and deploy
         env:
@@ -59,4 +59,10 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
           USER: ec2-user
         run: |
-          # existing ssh deployment script
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST 'bash -s' << 'ENDSSH'
+            # Commands to run on your EC2 instance
+            sudo docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+            sudo docker-compose up -d --build # Rebuild and start the containers
+          ENDSSH

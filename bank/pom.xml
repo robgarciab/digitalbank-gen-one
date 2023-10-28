@@ -18,9 +18,9 @@
 
 	<repositories>
 		<repository>
-			<id>bintray-ca-sv</id>
-			<name>bintray-ca</name>
-			<url>https://dl.bintray.com/ca/sv/</url>
+			<id>artifactory-broadcom-sv</id>
+			<name>artifactory-broadcom</name>
+			<url>https://packages.broadcom.com/artifactory/sv</url>
 		</repository>
 	</repositories>
 
@@ -37,7 +37,8 @@
         <tags></tags>
         <parallel.tests>1</parallel.tests>
         <webdriver.driver>firefox</webdriver.driver>
-        <webdriver.base.url>https://localhost:8443/bank</webdriver.base.url>
+        <!--<webdriver.base.url>https://localhost:8443/bank</webdriver.base.url>-->
+		<webdriver.base.url>http://10.250.99.134:8080/bank</webdriver.base.url>
         <buildNumber>local</buildNumber>
         <revision>2.1.0.${buildNumber}</revision>
         <contextPathName>bank</contextPathName>
