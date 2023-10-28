@@ -64,5 +64,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST 'bash -s' << 'ENDSSH'
             # Commands to run on your EC2 instance
             sudo docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+            sudo docker-compose down
             sudo docker-compose up -d --build # Rebuild and start the containers
           ENDSSH
