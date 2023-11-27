@@ -127,9 +127,9 @@ services:
       IO_DIGISIC_BANK_ATM_PORT: 
 
       # VISA Direct Payment Service
-      IO_DIGISIC_BANK_VISA_PROTOCOL: https
-      IO_DIGISIC_BANK_VISA_HOST: creditservices.io
-      IO_DIGISIC_BANK_VISA_PORT:
+      IO_DIGISIC_BANK_VISA_PROTOCOL: http
+      IO_DIGISIC_BANK_VISA_HOST: http://mockservicemay2542454pm294160.mock.blazemeter.com
+      IO_DIGISIC_BANK_VISA_PORT: 80
       
       # Open Banking API Service
       IO_DIGISIC_BANK_OBP_ENABLED: 'true'
